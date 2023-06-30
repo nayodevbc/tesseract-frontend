@@ -6,13 +6,42 @@ import { useEffect } from "react";
 function TodoList() {
   const [todos, setTodos] = useState([]);
 
-  useEffect(() => {
-    console.log(todos);
-  }, [todos]);
+  useEffect(async () => {
+    try {
+      const response = await fetch("https://todo-api-h8ov.onrender.com/api", {
+      method: "GET"
+    })
+    const res = await response.json()
+    console.log(res.data)
+    const newTodo = res.data.map((a) => {
+      return { id: a.id, text: a.title, description: a.description}
+    })
+    setTodos(newTodo)
+    } catch (error) {
+      console.error(`Couldn't retrieve ToDos: ${error.message}`)
+    }
+  });
 
-  const addTodo = (todo) => {
+  const addTodo = async (todo) => {
     if (!todo.text || /^\s*$/.test(todo.text)) {
       return;
+    }
+
+    const { text, description } = todo
+    console.log("todo:",text,description)
+    try {
+      const request = await fetch("https://todo-api-h8ov.onrender.com/api", {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({title: text, description: description})
+    })
+    const res = await request.json()
+    console.log(res)
+    } catch (error) {
+      console.error(`Couldn't retrieve ToDos: ${error.message}`)
     }
 
     const newTodos = [todo, ...todos];
