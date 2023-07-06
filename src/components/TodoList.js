@@ -13,7 +13,7 @@ function TodoList() {
       method: "GET"
     })
     const res = await response.json()
-    console.log(res.data)
+    console.log(res)
     const newTodo = res.data.map((a) => {
       return { id: a.id, text: a.title, description: a.description}
     })
@@ -23,7 +23,7 @@ function TodoList() {
     }
   }
   
-  useEffect(async () => {
+  useEffect(() => {
     getTodo()
   }, []);
 
@@ -34,7 +34,7 @@ function TodoList() {
     }
     const { text, description } = todo
     try {
-      const request = await fetch("https://todo-api-h8ov.onrender.com/api", {
+      const request = await fetch("http://localhost:4000/api", {
       method: "POST",
       headers: {
         'Accept': 'application/json',
@@ -42,13 +42,11 @@ function TodoList() {
       },
       body: JSON.stringify({title: text, description: description.length>0 ? description : " "})
     })
-    const res = await request.json()
-    console.log(res)
+    console.log(await request.json())
     } catch (error) {
       console.error(`Couldn't retrieve ToDos: ${error.message}`)
     }
     getTodo()
-    console.log(...todos);
   };
 
   const showDescription = (todoId) => {
@@ -68,7 +66,7 @@ function TodoList() {
     }
     const { text, description } = newValue
     try {
-      const request = await fetch(`https://todo-api-h8ov.onrender.com/api/${todoId}`, {
+      const request = await fetch(`http://localhost:4000/api/${todoId}`, {
       method: "PATCH",
       headers: {
         'Accept': 'application/json',
@@ -76,13 +74,11 @@ function TodoList() {
       },
       body: JSON.stringify({title: text, description: description.length>0 ? description : " "})
     })
-    const res = await request.json()
-    console.log(res)
+    console.log(await request.json())
     } catch (error) {
       console.error(`Couldn't retrieve ToDos: ${error.message}`)
     }
     getTodo()
-    console.log(...todos);
     /* console.log(newValue)
     setTodos((prev) =>
       prev.map((item) => (item.id === todoId ? newValue : item))
@@ -92,11 +88,10 @@ function TodoList() {
   // Elimina elemento de la base de datos
   const removeTodo = async (id) => {
     try {
-      const request = await fetch(`https://todo-api-h8ov.onrender.com/api/${id}`, {
+      const request = await fetch(`http://localhost:4000/api/${id}`, {
       method: "DELETE"
     })
-    const res = await request.json()
-    console.log(res)
+    console.log(await request.json())
     } catch (error) {
       console.error(`Couldn't retrieve ToDos: ${error.message}`)
     }
@@ -105,7 +100,7 @@ function TodoList() {
 
   const completeTodo = async (id) => {
     try {
-      const request = await fetch(`https://todo-api-h8ov.onrender.com/api/${id}`, {
+      const request = await fetch(`http://localhost:4000/api/${id}`, {
       method: "PATCH",
       headers: {
         'Accept': 'application/json',
@@ -113,8 +108,7 @@ function TodoList() {
       },
       body: JSON.stringify({ isDone: false})
     })
-    const res = await request.json()
-    console.log(res)
+    console.log(await request.json())
     } catch (error) {
       console.error(`Couldn't retrieve ToDos: ${error.message}`)
     }
